@@ -11,23 +11,29 @@ $(document).ready(function() {
                     var source = document.createElement("OPTION");
                     source.setAttribute("value", data.sources[i].id)
                     source.innerHTML = data.sources[i].name;
-                    document.getElementById("selection").appendChild(source)
-
-
+                    document.getElementById("selection").appendChild(source);
+                    console.log("display");
 
                 }
             }
         }
-
-    })
-    // .done(function(data) { //method chain
-    //     console.log(data);
-    //     console.log(data.status)
-    // });
-    $("#source").submit(function(event) {
-        document.getElementById("display").innerHTML = data.sources[i].name
-        event.preventDefault();
-        alert(document.getElementById("selection").value)
     });
-
+    $("#source").submit(function(event) {
+        event.preventDefault();
+        var value = document.getElementById("selection").value;
+        $.ajax({
+            method: "GET",
+            url: "https://newsapi.org/v2/top-headlines",
+            data: { sources: value, apiKey: APIKEY },
+            success: function(data) {
+                for (var i = 0; i < data.articles.length; i++) {
+                    console.log("start")
+                    var display = document.createElement("LI");
+                    display.innerHTML = data.articles[i].title;
+                    document.getElementById("display").appendChild(display);
+                }
+                console.log(data);
+            }
+        });
+    });
 });
